@@ -14,6 +14,7 @@
 		774097E122D7BE0C00DC46B5 /* DetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E022D7BE0C00DC46B5 /* DetailsViewController.m */; };
 		774097E422D8318400DC46B5 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E322D8318400DC46B5 /* ProfileViewController.m */; };
 		774097E722D844B600DC46B5 /* PostCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E622D844B600DC46B5 /* PostCollectionCell.m */; };
+		774097EA22D92A3D00DC46B5 /* HeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E922D92A3D00DC46B5 /* HeaderCell.m */; };
 		7762580222D55FFC009C491D /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7762580122D55FFC009C491D /* SignInViewController.m */; };
 		778FA4A122D527A200173FC4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 778FA4A022D527A200173FC4 /* AppDelegate.m */; };
 		778FA4A722D527A200173FC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 778FA4A522D527A200173FC4 /* Main.storyboard */; };
@@ -66,6 +67,8 @@
 		774097E322D8318400DC46B5 /* ProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		774097E522D844B600DC46B5 /* PostCollectionCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PostCollectionCell.h; sourceTree = "<group>"; };
 		774097E622D844B600DC46B5 /* PostCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PostCollectionCell.m; sourceTree = "<group>"; };
+		774097E822D92A3D00DC46B5 /* HeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeaderCell.h; sourceTree = "<group>"; };
+		774097E922D92A3D00DC46B5 /* HeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeaderCell.m; sourceTree = "<group>"; };
 		7762580022D55FFC009C491D /* SignInViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignInViewController.h; sourceTree = "<group>"; };
 		7762580122D55FFC009C491D /* SignInViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignInViewController.m; sourceTree = "<group>"; };
 		778FA49C22D527A200173FC4 /* instagram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagram.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -160,13 +163,15 @@
 				774097E322D8318400DC46B5 /* ProfileViewController.m */,
 				773DB70922D6B3830020C5A5 /* PostCell.h */,
 				773DB70A22D6B3830020C5A5 /* PostCell.m */,
+				774097E522D844B600DC46B5 /* PostCollectionCell.h */,
+				774097E622D844B600DC46B5 /* PostCollectionCell.m */,
+				774097E822D92A3D00DC46B5 /* HeaderCell.h */,
+				774097E922D92A3D00DC46B5 /* HeaderCell.m */,
 				773DB70F22D6E89E0020C5A5 /* Post.h */,
 				773DB71022D6E89E0020C5A5 /* Post.m */,
 				778FA4A822D527A300173FC4 /* Assets.xcassets */,
 				778FA4AE22D527A300173FC4 /* main.m */,
 				778FA4AD22D527A300173FC4 /* Info.plist */,
-				774097E522D844B600DC46B5 /* PostCollectionCell.h */,
-				774097E622D844B600DC46B5 /* PostCollectionCell.m */,
 			);
 			path = instagram;
 			sourceTree = "<group>";
@@ -436,6 +441,7 @@
 				778FA4AF22D527A300173FC4 /* main.m in Sources */,
 				774097E722D844B600DC46B5 /* PostCollectionCell.m in Sources */,
 				77EE13CD22D55A7000035112 /* SignUpViewController.m in Sources */,
+				774097EA22D92A3D00DC46B5 /* HeaderCell.m in Sources */,
 				773DB70822D56C9C0020C5A5 /* HomeViewController.m in Sources */,
 				774097E422D8318400DC46B5 /* ProfileViewController.m in Sources */,
 				773DB70E22D6B9410020C5A5 /* ComposeViewController.m in Sources */,

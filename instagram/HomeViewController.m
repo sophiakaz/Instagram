@@ -12,6 +12,7 @@
 #import "Post.h"
 #import "PostCell.h"
 #import "DetailsViewController.h"
+#import "HeaderCell.h"
 
 @interface HomeViewController () <UITableViewDataSource, UITableViewDelegate>
 
@@ -40,7 +41,6 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
     [self.refreshControl addTarget:self action:@selector(fetchPosts) forControlEvents:UIControlEventValueChanged];
     [self.tableView insertSubview:self.refreshControl atIndex:0];
     [self.tableView addSubview:self.refreshControl];
-    [self.tableView registerClass:[UITableViewHeaderFooterView class] forHeaderFooterViewReuseIdentifier:HeaderViewIdentifier];
     
     [self fetchPosts];
     
@@ -103,13 +103,12 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
     return self.posts.count;
 }
 */
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
     
     PostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PostCell"];
     
-    Post *post = self.posts[indexPath.row];
+    Post *post = self.posts[indexPath.section];
     cell.captionLabel.text = post.caption;
-    cell.usernameLabel.text = post.author.username;
     cell.usernameLabel2.text = post.author.username;
     cell.numLikesLabel.text = [[post.likeCount stringValue] stringByAppendingString:@" likes"];
     cell.numCommentsLabel.text = [[post.commentCount stringValue] stringByAppendingString:@" comments"];
@@ -122,9 +121,6 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
             cell.pictureView.image = [UIImage imageWithData:data];
         }
     }];
-    cell.profileView.layer.cornerRadius = cell.profileView.frame.size.height /2;
-    cell.profileView.layer.masksToBounds = YES;
-
     return cell;
 }
 
@@ -152,14 +148,68 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
 
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UITableViewHeaderFooterView *header = [tableView dequeueReusableHeaderFooterViewWithIdentifier:HeaderViewIdentifier];
+    HeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HeaderCell"];
     Post *post = self.posts[section];
-    header.textLabel.text = post.author.username;
-    return header;
+    cell.usernameLabel.text = post.author.username;
+    
+    NSDate *createdAtDate = [post createdAt];
+    cell.timeLabel.text = [self AgoStringFromTime:createdAtDate];
+    
+    /*
+    PFFileObject *imageFile = post.image;
+    [imageFile getDataInBackgroundWithBlock:^(NSData * _Nullable data, NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"Error: %@", error.localizedDescription);
+        } else {
+            NSLog(@"Image found successfully");
+            cell.profileView.image = [UIImage imageWithData:data];
+        }
+    }];
+     */
+    cell.profileView.layer.cornerRadius = cell.profileView.frame.size.height /2;
+    cell.profileView.layer.masksToBounds = YES;
+    return cell;
+    
 }
+ 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 30;
+    return 54;
+}
+
+- (NSString *)AgoStringFromTime:(NSDate *)dateTime{
+    NSDictionary *timeScale = @{@"sec"  :@1,
+                                @"min"  :@60,
+                                @"hr"   :@3600,
+                                @"day"  :@86400,
+                                @"week" :@605800,
+                                @"month":@2629743,
+                                @"year" :@31556926};
+    NSString *scale;
+    int timeAgo = 0-(int)[dateTime timeIntervalSinceNow];
+    if (timeAgo < 60) {
+        scale = @"sec";
+    } else if (timeAgo < 3600) {
+        scale = @"min";
+    } else if (timeAgo < 86400) {
+        scale = @"hr";
+    } else if (timeAgo < 605800) {
+        scale = @"day";
+    } else if (timeAgo < 2629743) {
+        scale = @"week";
+    } else if (timeAgo < 31556926) {
+        scale = @"month";
+    } else {
+        scale = @"year";
+    }
+    
+    timeAgo = timeAgo/[[timeScale objectForKey:scale] integerValue];
+    NSString *s = @"";
+    if (timeAgo > 1) {
+        s = @"s";
+    }
+    
+    return [NSString stringWithFormat:@"%d %@%@", timeAgo, scale, s];
 }
 
 @end

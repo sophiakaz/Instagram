@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *captionLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *profileView;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel2;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 - (IBAction)tapLike:(id)sender;
 - (IBAction)tapComment:(id)sender;
 
@@ -38,6 +39,8 @@
     self.numLikesLabel.text = [[self.post.likeCount stringValue] stringByAppendingString:@" likes"];
     self.numCommentsLabel.text = [[self.post.commentCount stringValue] stringByAppendingString:@" comments"];
     self.captionLabel.text = self.post.caption;
+    NSDate *createdAtDate = [self.post createdAt];
+    self.timeLabel.text = [self AgoStringFromTime:createdAtDate];
     
     PFFileObject *imageFile = self.post.image;
     [imageFile getDataInBackgroundWithBlock:^(NSData * _Nullable data, NSError * _Nullable error) {
@@ -65,6 +68,40 @@
 }
 */
 
+- (NSString *)AgoStringFromTime:(NSDate *)dateTime{
+    NSDictionary *timeScale = @{@"sec"  :@1,
+                                @"min"  :@60,
+                                @"hr"   :@3600,
+                                @"day"  :@86400,
+                                @"week" :@605800,
+                                @"month":@2629743,
+                                @"year" :@31556926};
+    NSString *scale;
+    int timeAgo = 0-(int)[dateTime timeIntervalSinceNow];
+    if (timeAgo < 60) {
+        scale = @"sec";
+    } else if (timeAgo < 3600) {
+        scale = @"min";
+    } else if (timeAgo < 86400) {
+        scale = @"hr";
+    } else if (timeAgo < 605800) {
+        scale = @"day";
+    } else if (timeAgo < 2629743) {
+        scale = @"week";
+    } else if (timeAgo < 31556926) {
+        scale = @"month";
+    } else {
+        scale = @"year";
+    }
+    
+    timeAgo = timeAgo/[[timeScale objectForKey:scale] integerValue];
+    NSString *s = @"";
+    if (timeAgo > 1) {
+        s = @"s";
+    }
+    
+    return [NSString stringWithFormat:@"%d %@%@", timeAgo, scale, s];
+}
 
 - (IBAction)tapLike:(id)sender {
 }
