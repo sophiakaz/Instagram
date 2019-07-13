@@ -21,4 +21,6 @@
     // Configure the view for the selected state
 }
 
+- (IBAction)tapUsername:(id)sender {
+}
 @end

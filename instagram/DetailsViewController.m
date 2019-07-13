@@ -40,7 +40,7 @@
     self.numCommentsLabel.text = [[self.post.commentCount stringValue] stringByAppendingString:@" comments"];
     self.captionLabel.text = self.post.caption;
     NSDate *createdAtDate = [self.post createdAt];
-    self.timeLabel.text = [self AgoStringFromTime:createdAtDate];
+    self.timeLabel.text = [self TimeSince:createdAtDate];
     
     PFFileObject *imageFile = self.post.image;
     [imageFile getDataInBackgroundWithBlock:^(NSData * _Nullable data, NSError * _Nullable error) {
@@ -52,6 +52,15 @@
         }
     }];
     
+    PFFileObject *imageFile2 = [self.post.author objectForKey:@"profileImage"];
+    [imageFile2 getDataInBackgroundWithBlock:^(NSData * _Nullable data, NSError * _Nullable error) {
+        if (error != nil) {
+            NSLog(@"Error: %@", error.localizedDescription);
+        } else {
+            NSLog(@"Image found successfully");
+            self.profileView.image = [UIImage imageWithData:data];
+        }
+    }];
     self.profileView.layer.cornerRadius = self.profileView.frame.size.height /2;
     self.profileView.layer.masksToBounds = YES;
 
@@ -68,7 +77,7 @@
 }
 */
 
-- (NSString *)AgoStringFromTime:(NSDate *)dateTime{
+- (NSString *)TimeSince:(NSDate *)dateTime{
     NSDictionary *timeScale = @{@"sec"  :@1,
                                 @"min"  :@60,
                                 @"hr"   :@3600,
@@ -77,35 +86,45 @@
                                 @"month":@2629743,
                                 @"year" :@31556926};
     NSString *scale;
-    int timeAgo = 0-(int)[dateTime timeIntervalSinceNow];
-    if (timeAgo < 60) {
+    int timeSince = 0-(int)[dateTime timeIntervalSinceNow];
+    if (timeSince < 60) {
         scale = @"sec";
-    } else if (timeAgo < 3600) {
+    } else if (timeSince < 3600) {
         scale = @"min";
-    } else if (timeAgo < 86400) {
+    } else if (timeSince < 86400) {
         scale = @"hr";
-    } else if (timeAgo < 605800) {
+    } else if (timeSince < 605800) {
         scale = @"day";
-    } else if (timeAgo < 2629743) {
+    } else if (timeSince < 2629743) {
         scale = @"week";
-    } else if (timeAgo < 31556926) {
+    } else if (timeSince < 31556926) {
         scale = @"month";
     } else {
         scale = @"year";
     }
     
-    timeAgo = timeAgo/[[timeScale objectForKey:scale] integerValue];
+    timeSince = timeSince/[[timeScale objectForKey:scale] integerValue];
     NSString *s = @"";
-    if (timeAgo > 1) {
+    if (timeSince > 1) {
         s = @"s";
     }
     
-    return [NSString stringWithFormat:@"%d %@%@", timeAgo, scale, s];
+    return [NSString stringWithFormat:@"%d %@%@", timeSince, scale, s];
 }
 
 - (IBAction)tapLike:(id)sender {
+    int value = [self.post.likeCount intValue];
+    self.post.likeCount = [NSNumber numberWithInt:value + 1];
+    self.numLikesLabel.text = [[self.post.likeCount stringValue] stringByAppendingString:@" likes"];
+    UIImage *img = [UIImage imageNamed:@"like-red"];
+    [self.likeButton setImage:img forState:UIControlStateNormal];
+    [self.post saveInBackground];
 }
 
 - (IBAction)tapComment:(id)sender {
+    int value = [self.post.commentCount intValue];
+    self.post.commentCount = [NSNumber numberWithInt:value + 1];
+    self.numCommentsLabel.text = [[self.post.commentCount stringValue] stringByAppendingString:@" comments"];
+    [self.post saveInBackground];
 }
 @end

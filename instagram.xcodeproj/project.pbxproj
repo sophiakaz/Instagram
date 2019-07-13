@@ -15,6 +15,8 @@
 		774097E422D8318400DC46B5 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E322D8318400DC46B5 /* ProfileViewController.m */; };
 		774097E722D844B600DC46B5 /* PostCollectionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E622D844B600DC46B5 /* PostCollectionCell.m */; };
 		774097EA22D92A3D00DC46B5 /* HeaderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097E922D92A3D00DC46B5 /* HeaderCell.m */; };
+		774097ED22D95C5A00DC46B5 /* EditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097EC22D95C5A00DC46B5 /* EditProfileViewController.m */; };
+		774097F022D979C200DC46B5 /* ProfileDetailsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 774097EF22D979C200DC46B5 /* ProfileDetailsViewController.m */; };
 		7762580222D55FFC009C491D /* SignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7762580122D55FFC009C491D /* SignInViewController.m */; };
 		778FA4A122D527A200173FC4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 778FA4A022D527A200173FC4 /* AppDelegate.m */; };
 		778FA4A722D527A200173FC4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 778FA4A522D527A200173FC4 /* Main.storyboard */; };
@@ -69,6 +71,10 @@
 		774097E622D844B600DC46B5 /* PostCollectionCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PostCollectionCell.m; sourceTree = "<group>"; };
 		774097E822D92A3D00DC46B5 /* HeaderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HeaderCell.h; sourceTree = "<group>"; };
 		774097E922D92A3D00DC46B5 /* HeaderCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HeaderCell.m; sourceTree = "<group>"; };
+		774097EB22D95C5A00DC46B5 /* EditProfileViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditProfileViewController.h; sourceTree = "<group>"; };
+		774097EC22D95C5A00DC46B5 /* EditProfileViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EditProfileViewController.m; sourceTree = "<group>"; };
+		774097EE22D979C200DC46B5 /* ProfileDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProfileDetailsViewController.h; sourceTree = "<group>"; };
+		774097EF22D979C200DC46B5 /* ProfileDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProfileDetailsViewController.m; sourceTree = "<group>"; };
 		7762580022D55FFC009C491D /* SignInViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SignInViewController.h; sourceTree = "<group>"; };
 		7762580122D55FFC009C491D /* SignInViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SignInViewController.m; sourceTree = "<group>"; };
 		778FA49C22D527A200173FC4 /* instagram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = instagram.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,6 +178,10 @@
 				778FA4A822D527A300173FC4 /* Assets.xcassets */,
 				778FA4AE22D527A300173FC4 /* main.m */,
 				778FA4AD22D527A300173FC4 /* Info.plist */,
+				774097EB22D95C5A00DC46B5 /* EditProfileViewController.h */,
+				774097EC22D95C5A00DC46B5 /* EditProfileViewController.m */,
+				774097EE22D979C200DC46B5 /* ProfileDetailsViewController.h */,
+				774097EF22D979C200DC46B5 /* ProfileDetailsViewController.m */,
 			);
 			path = instagram;
 			sourceTree = "<group>";
@@ -440,11 +450,13 @@
 				7762580222D55FFC009C491D /* SignInViewController.m in Sources */,
 				778FA4AF22D527A300173FC4 /* main.m in Sources */,
 				774097E722D844B600DC46B5 /* PostCollectionCell.m in Sources */,
+				774097F022D979C200DC46B5 /* ProfileDetailsViewController.m in Sources */,
 				77EE13CD22D55A7000035112 /* SignUpViewController.m in Sources */,
 				774097EA22D92A3D00DC46B5 /* HeaderCell.m in Sources */,
 				773DB70822D56C9C0020C5A5 /* HomeViewController.m in Sources */,
 				774097E422D8318400DC46B5 /* ProfileViewController.m in Sources */,
 				773DB70E22D6B9410020C5A5 /* ComposeViewController.m in Sources */,
+				774097ED22D95C5A00DC46B5 /* EditProfileViewController.m in Sources */,
 				778FA4A122D527A200173FC4 /* AppDelegate.m in Sources */,
 				774097E122D7BE0C00DC46B5 /* DetailsViewController.m in Sources */,
 				773DB70B22D6B3840020C5A5 /* PostCell.m in Sources */,

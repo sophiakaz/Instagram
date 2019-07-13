@@ -1,19 +1,17 @@
 //
-//  ProfileViewController.m
+//  ProfileDetailsViewController.m
 //  instagram
 //
-//  Created by sophiakaz on 7/11/19.
+//  Created by sophiakaz on 7/12/19.
 //  Copyright © 2019 sophiakaz. All rights reserved.
 //
 
-#import "ProfileViewController.h"
-#import "Parse/Parse.h"
+#import "ProfileDetailsViewController.h"
 #import "Post.h"
-#import "PostCell.h"
-#import "DetailsViewController.h"
+#import "Parse/Parse.h"
 #import "PostCollectionCell.h"
 
-@interface ProfileViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface ProfileDetailsViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 @property (weak, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (weak, nonatomic) IBOutlet UIImageView *profileView;
 @property (weak, nonatomic) IBOutlet UILabel *nameLabel;
@@ -22,11 +20,10 @@
 @property (weak, nonatomic) IBOutlet UILabel *numFollowersLabel;
 @property (weak, nonatomic) IBOutlet UILabel *numFollowingLabel;
 @property (nonatomic, strong) NSArray *posts;
-@property (nonatomic, strong) PFUser *user;
 
 @end
 
-@implementation ProfileViewController 
+@implementation ProfileDetailsViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -43,19 +40,19 @@
     CGFloat itemHeight = itemWidth;
     layout.itemSize = CGSizeMake(itemWidth, itemHeight);
     
-    self.user = PFUser.currentUser;
+    self.user = self.user;
     self.navigationItem.title = self.user.username;
     UINavigationBar *navigationBar = self.navigationController.navigationBar;
     [navigationBar setBackgroundImage:[UIImage imageNamed:@"scripBlack"] forBarMetrics:UIBarMetricsDefault];
     
     [self fetchPosts];
-
+    
     self.numFollowersLabel.text = @"618";
     self.numFollowingLabel.text = @"542";
     self.bioLabel.text = @"This is my super cool and somewhat short bio!";
     self.nameLabel.text = @"First Last";
     
-    PFFileObject *imageFile = [PFUser.currentUser objectForKey:@"profileImage"];
+    PFFileObject *imageFile = [self.user objectForKey:@"profileImage"];
     [imageFile getDataInBackgroundWithBlock:^(NSData * _Nullable data, NSError * _Nullable error) {
         if (error != nil) {
             NSLog(@"Error: %@", error.localizedDescription);
@@ -71,9 +68,9 @@
 }
 
 - (void)fetchPosts {
-
+    
     PFQuery *postQuery = [PFQuery queryWithClassName:@"Post"];
-    [postQuery whereKey:@"author" equalTo:[PFUser currentUser]];
+    [postQuery whereKey:@"author" equalTo:self.user];
     [postQuery orderByDescending:@"createdAt"];
     [postQuery includeKey:@"author"];
     postQuery.limit = 20;
@@ -115,21 +112,5 @@
 - (NSInteger)collectionView:(nonnull UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.posts.count;
 }
-
-/*
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    
-    if ([segue.identifier isEqualToString:@"showDetails"]){
-        UICollectionViewCell *tappedCell = sender;
-        NSIndexPath *indexPath = [self.collectionView indexPathForCell:tappedCell];
-        Post *post = self.posts[indexPath.row];
-        
-        DetailsViewController *detailsViewController = [segue destinationViewController];
-        detailsViewController.post = post;
-    }
-}
-*/
 
 @end

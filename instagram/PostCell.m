@@ -23,8 +23,18 @@
 
 
 - (IBAction)tapLike:(id)sender {
+    int value = [self.post.likeCount intValue];
+    self.post.likeCount = [NSNumber numberWithInt:value + 1];
+    self.numLikesLabel.text = [[self.post.likeCount stringValue] stringByAppendingString:@" likes"];
+    UIImage *img = [UIImage imageNamed:@"like-red"];
+    [self.likeButton setImage:img forState:UIControlStateNormal];
+    [self.post saveInBackground];
 }
 
 - (IBAction)tapComment:(id)sender {
+    int value = [self.post.commentCount intValue];
+    self.post.commentCount = [NSNumber numberWithInt:value + 1];
+    self.numCommentsLabel.text = [[self.post.commentCount stringValue] stringByAppendingString:@" comments"];
+    [self.post saveInBackground];
 }
 @end

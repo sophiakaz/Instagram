@@ -12,27 +12,30 @@
 #import "Post.h"
 #import "PostCell.h"
 #import "DetailsViewController.h"
+#import "ProfileDetailsViewController.h"
 #import "HeaderCell.h"
 
-@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface HomeViewController () <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
 
 - (IBAction)tapLogout:(id)sender;
 @property (nonatomic, strong) NSArray *posts;
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (assign, nonatomic) BOOL isMoreDataLoading;
 
 @end
 
 @implementation HomeViewController
 NSString *HeaderViewIdentifier = @"TableViewHeaderView";
-
+NSInteger limit;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
+    limit = 5;
     
     UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     [self.view addSubview:activityIndicator];
@@ -70,7 +73,7 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
     PFQuery *postQuery = [Post query];
     [postQuery orderByDescending:@"createdAt"];
     [postQuery includeKey:@"author"];
-    postQuery.limit = 20;
+    postQuery.limit = limit;
     
     // fetch data asynchronously
     [postQuery findObjectsInBackgroundWithBlock:^(NSArray<Post *> * _Nullable posts, NSError * _Nullable error) {
@@ -98,16 +101,14 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
         }
     }];
 }
-/*
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.posts.count;
-}
-*/
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(nonnull NSIndexPath *)indexPath{
     
     PostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"PostCell"];
     
     Post *post = self.posts[indexPath.section];
+    cell.post = post;
     cell.captionLabel.text = post.caption;
     cell.usernameLabel2.text = post.author.username;
     cell.numLikesLabel.text = [[post.likeCount stringValue] stringByAppendingString:@" likes"];
@@ -131,10 +132,18 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
     if ([segue.identifier isEqualToString:@"showDetails"]){
         UITableViewCell *tappedCell = sender;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:tappedCell];
-        Post *post = self.posts[indexPath.row];
+        Post *post = self.posts[indexPath.section];
         
         DetailsViewController *detailsViewController = [segue destinationViewController];
         detailsViewController.post = post;
+    }
+    
+    else if ([segue.identifier isEqualToString:@"showProfile"]){
+        CGPoint buttonPosition = [sender convertPoint:CGPointZero toView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+        ProfileDetailsViewController *profileDetailsViewController = [segue destinationViewController];
+        Post *post = self.posts[indexPath.section];
+        profileDetailsViewController.user = post.author;
     }
 }
 
@@ -150,13 +159,13 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     HeaderCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HeaderCell"];
     Post *post = self.posts[section];
-    cell.usernameLabel.text = post.author.username;
+    [cell.usernameLabel setTitle:post.author.username forState:UIControlStateNormal];
+    [cell.usernameLabel setTitle:post.author.username forState:UIControlStateSelected];
     
     NSDate *createdAtDate = [post createdAt];
-    cell.timeLabel.text = [self AgoStringFromTime:createdAtDate];
+    cell.timeLabel.text = [self TimeSince:createdAtDate];
     
-    /*
-    PFFileObject *imageFile = post.image;
+    PFFileObject *imageFile = [post.author objectForKey:@"profileImage"];
     [imageFile getDataInBackgroundWithBlock:^(NSData * _Nullable data, NSError * _Nullable error) {
         if (error != nil) {
             NSLog(@"Error: %@", error.localizedDescription);
@@ -165,7 +174,7 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
             cell.profileView.image = [UIImage imageWithData:data];
         }
     }];
-     */
+    
     cell.profileView.layer.cornerRadius = cell.profileView.frame.size.height /2;
     cell.profileView.layer.masksToBounds = YES;
     return cell;
@@ -177,7 +186,7 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
     return 54;
 }
 
-- (NSString *)AgoStringFromTime:(NSDate *)dateTime{
+- (NSString *)TimeSince:(NSDate *)dateTime{
     NSDictionary *timeScale = @{@"sec"  :@1,
                                 @"min"  :@60,
                                 @"hr"   :@3600,
@@ -186,30 +195,69 @@ NSString *HeaderViewIdentifier = @"TableViewHeaderView";
                                 @"month":@2629743,
                                 @"year" :@31556926};
     NSString *scale;
-    int timeAgo = 0-(int)[dateTime timeIntervalSinceNow];
-    if (timeAgo < 60) {
+    int timeSince = 0-(int)[dateTime timeIntervalSinceNow];
+    if (timeSince < 60) {
         scale = @"sec";
-    } else if (timeAgo < 3600) {
+    } else if (timeSince < 3600) {
         scale = @"min";
-    } else if (timeAgo < 86400) {
+    } else if (timeSince < 86400) {
         scale = @"hr";
-    } else if (timeAgo < 605800) {
+    } else if (timeSince < 605800) {
         scale = @"day";
-    } else if (timeAgo < 2629743) {
+    } else if (timeSince < 2629743) {
         scale = @"week";
-    } else if (timeAgo < 31556926) {
+    } else if (timeSince < 31556926) {
         scale = @"month";
     } else {
         scale = @"year";
     }
     
-    timeAgo = timeAgo/[[timeScale objectForKey:scale] integerValue];
+    timeSince = timeSince/[[timeScale objectForKey:scale] integerValue];
     NSString *s = @"";
-    if (timeAgo > 1) {
+    if (timeSince > 1) {
         s = @"s";
     }
     
-    return [NSString stringWithFormat:@"%d %@%@", timeAgo, scale, s];
+    return [NSString stringWithFormat:@"%d %@%@", timeSince, scale, s];
+}
+
+-(void)loadMoreData{
+    
+    // construct PFQuery
+    PFQuery *postQuery = [Post query];
+    [postQuery orderByDescending:@"createdAt"];
+    [postQuery includeKey:@"author"];
+    limit = limit+5;
+    postQuery.limit = limit;
+    
+    // fetch data asynchronously
+    [postQuery findObjectsInBackgroundWithBlock:^(NSArray<Post *> * _Nullable posts, NSError * _Nullable error) {
+        if (posts) {
+            if (posts.count > self.posts.count) {
+                NSLog(@"Posts found successfully");
+                self.isMoreDataLoading = false;
+                self.posts = posts;
+                [self.tableView reloadData];
+            }
+        }
+        else {
+            NSLog(@"Error: %@", error.localizedDescription);
+        }
+    }];
+}
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+    if(!self.isMoreDataLoading){
+        // Calculate the position of one screen length before the bottom of the results
+        int scrollViewContentHeight = self.tableView.contentSize.height;
+        int scrollOffsetThreshold = scrollViewContentHeight - self.tableView.bounds.size.height;
+        
+        // When the user has scrolled past the threshold, start requesting
+        if(scrollView.contentOffset.y > scrollOffsetThreshold && self.tableView.isDragging) {
+            self.isMoreDataLoading = true;
+            [self loadMoreData];
+        }
+    }
 }
 
 @end
