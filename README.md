@@ -1,6 +1,6 @@
 # Project 4 - *Instagram*
 
-**NInstagram** is a photo sharing app using Parse as its backend.
+**Instagram** is a photo sharing app using Parse as its backend.
 
 Time spent: **26** hours spent in total
 
